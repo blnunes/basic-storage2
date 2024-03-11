@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @Slf4j
 public class ProductService {
@@ -19,9 +20,10 @@ public class ProductService {
     @Autowired
     private ProductMapper mapper;
 
-    public List<Product> getAll() {
+    public List<ProductDTO> getAll() {
         log.info("Getting list of products");
-        return repository.findAll();
+        return repository.findAll().stream().map(product -> mapper.convertToDTO(product))
+                .toList();
     }
 
     public ProductDTO saveProduct(final ProductDTO productDTO) {
@@ -30,4 +32,5 @@ public class ProductService {
         log.info("Saving the product {}", newProduct);
         return newProduct;
     }
+
 }
