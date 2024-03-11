@@ -1,6 +1,6 @@
 package com.bruno.application.product.mapper;
 
-import com.bruno.application.product.dto.ProductDTO;
+import com.bruno.application.product.dto.ProductRQ;
 import com.bruno.application.product.entity.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -14,11 +14,11 @@ public class ProductMapper {
         this.modelMapper = new ModelMapper();
     }
 
-    public Product convertToEntity(ProductDTO productDTO) {
-        return modelMapper.map(productDTO, Product.class);
+    public Product convertToEntity(ProductRQ productRQ) {
+        return modelMapper.map(productRQ, Product.class);
     }
 
-    public ProductDTO convertToDTO(Product product) {
-        return modelMapper.map(product, ProductDTO.class);
+    public ProductRQ convertToDTO(Product product) {
+        return modelMapper.map(product, ProductRQ.class);
     }
 }

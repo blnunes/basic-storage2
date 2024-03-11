@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductRQ extends ErrorRS {
     @NotNull(message = "Name cannot be null")
     @Size(max = 20, min = 3, message = "The name must be (max 20 min 3)")
     private String name;

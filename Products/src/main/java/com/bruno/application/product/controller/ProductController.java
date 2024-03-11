@@ -1,6 +1,6 @@
 package com.bruno.application.product.controller;
 
-import com.bruno.application.product.dto.ProductDTO;
+import com.bruno.application.product.dto.ProductRQ;
 import com.bruno.application.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -26,13 +28,13 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of Product",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDTO.class))}),
+                            schema = @Schema(implementation = ProductRQ.class))}),
             @ApiResponse(responseCode = "404", description = "Empty List",
                     content = @Content)})
-    public ResponseEntity<List<ProductDTO>> getExamples() {
-        return productService.getAll().isEmpty() ?
-                ResponseEntity.notFound().build() :
-                ResponseEntity.ok().body(productService.getAll());
+    public ResponseEntity<List<ProductRQ>> getExamples() {
+        return ResponseEntity.ok().body(
+                Optional.ofNullable(productService.getAll())
+                        .orElseThrow(() -> new NoSuchElementException("Empty list")));
     }
 
     @PostMapping
@@ -40,13 +42,13 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Create Product",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDTO.class))}),
+                            schema = @Schema(implementation = ProductRQ.class))}),
             @ApiResponse(responseCode = "400", description = "Validation failed for object=",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Bad request",
                     content = @Content)})
-    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody final ProductDTO product) {
-        final ProductDTO savedProduct = productService.saveProduct(product);
+    public ResponseEntity<ProductRQ> createProduct(@Valid @RequestBody final ProductRQ product) {
+        final ProductRQ savedProduct = productService.saveProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 }
